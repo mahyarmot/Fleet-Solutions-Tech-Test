@@ -36,13 +36,14 @@ jobs:
       run: dotnet build src/NhsTechTest/NhsTechTest.sln --no-restore --configuration Release
     
     - name: Install Swashbuckle CLI
-      run: dotnet tool install -g Swashbuckle.AspNetCore.Cli
+      run: |
+        dotnet new tool-manifest --force
+        dotnet tool install Swashbuckle.AspNetCore.Cli
     
     - name: Generate Swagger JSON
       run: |
         cd src/NhsTechTest/NhsTechTest.Api
-        dotnet build --configuration Release
-        swagger tofile --output ../../../swagger.json bin/Release/net8.0/NhsTechTest.Api.dll v1
+        dotnet swagger tofile --output ../../../swagger.json bin/Release/net8.0/NhsTechTest.Api.dll v1
     
     - name: Create docs directory
       run: mkdir -p docs
