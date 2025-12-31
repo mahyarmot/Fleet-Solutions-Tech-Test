@@ -1,225 +1,53 @@
-name: Deploy Swagger to GitHub Pages
+name: Deploy Swagger UI to GitHub Pages
 
 on:
   push:
     branches: [ main ]
   workflow_dispatch:
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Allow only one concurrent deployment
 concurrency:
   group: "pages"
   cancel-in-progress: false
 
 jobs:
-  build-swagger:
+  deploy:
     runs-on: ubuntu-latest
     
     steps:
     - name: Checkout
       uses: actions/checkout@v4
     
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: '8.0.x'
-    
-    - name: Restore dependencies
-      run: dotnet restore src/NhsTechTest/NhsTechTest.sln
-    
-    - name: Build
-      run: dotnet build src/NhsTechTest/NhsTechTest.sln --no-restore --configuration Release
-    
-    - name: Install Swashbuckle CLI
-      run: |
-        dotnet new tool-manifest --force
-        dotnet tool install Swashbuckle.AspNetCore.Cli
-    
-    - name: Generate Swagger JSON
-      run: |
-        dotnet swagger tofile \
-          --output swagger.json \
-          src/NhsTechTest/NhsTechTest.Api/bin/Release/net8.0/NhsTechTest.Api.dll \
-          v1
-    
     - name: Create docs directory
       run: mkdir -p docs
     
-    - name: Copy Swagger JSON to docs
+    - name: Copy swagger.json
       run: cp swagger.json docs/
     
-    - name: Create Swagger UI HTML
+    - name: Create Swagger UI
       run: |
         cat > docs/index.html << 'EOF'
         <!DOCTYPE html>
-        <html lang="en">
-        <head>
-          <meta charset="utf-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <meta name="description" content="Healthcare API - Swagger Documentation" />
-          <title>Healthcare API Documentation</title>
-          <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui.css" />
-          <style>
-            body {
-              margin: 0;
-              padding: 0;
-            }
-            .topbar {
-              display: none;
-            }
-            .swagger-ui .info {
-              margin: 20px 0;
-            }
-            .custom-header {
-              background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-              color: white;
-              padding: 30px 20px;
-              text-align: center;
-              box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            }
-            .custom-header h1 {
-              margin: 0;
-              font-size: 2.5em;
-              font-weight: 300;
-            }
-            .custom-header p {
-              margin: 10px 0 0 0;
-              font-size: 1.2em;
-              opacity: 0.9;
-            }
-            .info-section {
-              max-width: 1200px;
-              margin: 20px auto;
-              padding: 0 20px;
-            }
-            .info-card {
-              background: #f8f9fa;
-              border-left: 4px solid #667eea;
-              padding: 15px 20px;
-              margin: 15px 0;
-              border-radius: 4px;
-            }
-            .info-card h3 {
-              margin-top: 0;
-              color: #667eea;
-            }
-            .badge {
-              display: inline-block;
-              padding: 4px 12px;
-              margin: 5px;
-              border-radius: 12px;
-              font-size: 0.85em;
-              font-weight: 500;
-            }
-            .badge-architecture {
-              background: #e3f2fd;
-              color: #1976d2;
-            }
-            .badge-pattern {
-              background: #f3e5f5;
-              color: #7b1fa2;
-            }
-            .badge-tech {
-              background: #e8f5e9;
-              color: #388e3c;
-            }
-          </style>
-        </head>
-        <body>
-          <div class="custom-header">
-            <h1>🏥 Healthcare API</h1>
-            <p>RESTful API for Patient Management</p>
-          </div>
-
-          <div class="info-section">
-            <div class="info-card">
-              <h3>📋 About This API</h3>
-              <p>A production-ready .NET 8 API implementing Clean Architecture, CQRS, and modern development patterns for managing patient information in healthcare systems.</p>
-              <div>
-                <span class="badge badge-architecture">Clean Architecture</span>
-                <span class="badge badge-pattern">CQRS</span>
-                <span class="badge badge-pattern">Repository Pattern</span>
-                <span class="badge badge-tech">.NET 8</span>
-                <span class="badge badge-tech">MediatR</span>
-                <span class="badge badge-tech">ErrorOr</span>
-              </div>
-            </div>
-
-            <div class="info-card">
-              <h3>🚀 Quick Start</h3>
-              <p><strong>Base URL:</strong> <code>https://localhost:5001/api</code> (when running locally)</p>
-              <p><strong>Sample Request:</strong></p>
-              <pre style="background: #2d2d2d; color: #f8f8f2; padding: 15px; border-radius: 4px; overflow-x: auto;"><code>curl https://localhost:5001/api/patients/1</code></pre>
-              <p><strong>Available Patient IDs:</strong> 1, 2, 3, 4, 5</p>
-            </div>
-
-            <div class="info-card">
-              <h3>📊 Response Examples</h3>
-              <p><strong>Success (200):</strong> Returns patient summary with ID, NHS Number, Name, DOB, Age, GP Practice</p>
-              <p><strong>Not Found (404):</strong> Returns ProblemDetails when patient doesn't exist</p>
-              <p><strong>Validation Error (400):</strong> Returns ProblemDetails for invalid input</p>
-            </div>
-
-            <div class="info-card">
-              <h3>🔗 Resources</h3>
-              <p>
-                <a href="https://github.com/YOUR_USERNAME/YOUR_REPO" target="_blank" style="color: #667eea; text-decoration: none; margin-right: 15px;">📦 GitHub Repository</a>
-                <a href="https://github.com/YOUR_USERNAME/YOUR_REPO#readme" target="_blank" style="color: #667eea; text-decoration: none;">📖 Full Documentation</a>
-              </p>
-            </div>
-          </div>
-
-          <div id="swagger-ui"></div>
-          
-          <script src="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui-bundle.js" crossorigin></script>
-          <script src="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui-standalone-preset.js" crossorigin></script>
-          <script>
-            window.onload = () => {
-              window.ui = SwaggerUIBundle({
-                url: './swagger.json',
-                dom_id: '#swagger-ui',
-                deepLinking: true,
-                presets: [
-                  SwaggerUIBundle.presets.apis,
-                  SwaggerUIStandalonePreset
-                ],
-                plugins: [
-                  SwaggerUIBundle.plugins.DownloadUrl
-                ],
-                layout: "StandaloneLayout",
-                defaultModelsExpandDepth: 1,
-                defaultModelExpandDepth: 1,
-                docExpansion: "list",
-                filter: true,
-                tryItOutEnabled: true,
-                supportedSubmitMethods: ['get', 'post', 'put', 'delete', 'patch']
-              });
-            };
-          </script>
-        </body>
-        </html>
-        EOF
-    
-    - name: Create 404 page
-      run: |
-        cat > docs/404.html << 'EOF'
-        <!DOCTYPE html>
         <html>
         <head>
-          <meta charset="utf-8">
-          <title>Redirecting...</title>
-          <script>
-            // Redirect 404s to index.html for single-page app behavior
-            window.location.href = '/';
-          </script>
+          <meta charset="utf-8" />
+          <title>NHS Tech Test API</title>
+          <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui.css" />
         </head>
         <body>
-          <p>Redirecting to API documentation...</p>
+          <div id="swagger-ui"></div>
+          <script src="https://unpkg.com/swagger-ui-dist@5.11.0/swagger-ui-bundle.js"></script>
+          <script>
+            SwaggerUIBundle({
+              url: './swagger.json',
+              dom_id: '#swagger-ui',
+              presets: [SwaggerUIBundle.presets.apis, SwaggerUIBundle.SwaggerUIStandalonePreset]
+            });
+          </script>
         </body>
         </html>
         EOF
@@ -228,15 +56,6 @@ jobs:
       uses: actions/upload-pages-artifact@v3
       with:
         path: './docs'
-
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build-swagger
     
-    steps:
     - name: Deploy to GitHub Pages
-      id: deployment
       uses: actions/deploy-pages@v4
