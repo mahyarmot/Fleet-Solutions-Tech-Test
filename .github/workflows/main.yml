@@ -42,8 +42,10 @@ jobs:
     
     - name: Generate Swagger JSON
       run: |
-        cd src/NhsTechTest/NhsTechTest.Api
-        dotnet swagger tofile --output ../../../swagger.json bin/Release/net8.0/NhsTechTest.Api.dll v1
+        dotnet swagger tofile \
+          --output swagger.json \
+          src/NhsTechTest/NhsTechTest.Api/bin/Release/net8.0/NhsTechTest.Api.dll \
+          v1
     
     - name: Create docs directory
       run: mkdir -p docs
