@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NhsTechTest.Domain", "NhsTe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NhsTechTest.Infrastructure", "NhsTechTest.Infrastructure\NhsTechTest.Infrastructure.csproj", "{EAF621B5-B224-4964-A410-A0067DAF3404}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NhsTechTest.Application.Tests", "..\..\tests\NhsTechTest.Application.Tests\NhsTechTest.Application.Tests.csproj", "{1DF9DC0A-4E9B-4EFE-BCA0-3A5598325B19}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{EAF621B5-B224-4964-A410-A0067DAF3404}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EAF621B5-B224-4964-A410-A0067DAF3404}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EAF621B5-B224-4964-A410-A0067DAF3404}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DF9DC0A-4E9B-4EFE-BCA0-3A5598325B19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DF9DC0A-4E9B-4EFE-BCA0-3A5598325B19}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DF9DC0A-4E9B-4EFE-BCA0-3A5598325B19}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DF9DC0A-4E9B-4EFE-BCA0-3A5598325B19}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
