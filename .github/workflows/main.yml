@@ -30,10 +30,10 @@ jobs:
         dotnet-version: '8.0.x'
     
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore src/NhsTechTest/NhsTechTest.sln
     
     - name: Build
-      run: dotnet build --no-restore --configuration Release
+      run: dotnet build src/NhsTechTest/NhsTechTest.sln --no-restore --configuration Release
     
     - name: Install Swashbuckle CLI
       run: dotnet tool install -g Swashbuckle.AspNetCore.Cli
@@ -42,7 +42,7 @@ jobs:
       run: |
         cd src/HealthcareApi.API
         dotnet build --configuration Release
-        swagger tofile --output ../../swagger.json bin/Release/net8.0/HealthcareApi.API.dll v1
+        swagger tofile --output ../../../swagger.json bin/Release/net8.0/HealthcareApi.API.dll v1
     
     - name: Create docs directory
       run: mkdir -p docs
