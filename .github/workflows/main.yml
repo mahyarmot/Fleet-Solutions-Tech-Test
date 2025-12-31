@@ -12,11 +12,14 @@ permissions:
 
 concurrency:
   group: "pages"
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     
     steps:
     - name: Checkout
@@ -58,4 +61,5 @@ jobs:
         path: './docs'
     
     - name: Deploy to GitHub Pages
+      id: deployment
       uses: actions/deploy-pages@v4
