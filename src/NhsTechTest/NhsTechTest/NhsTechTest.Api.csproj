@@ -11,7 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
+    <ProjectReference Include="..\NhsTechTest.Application\NhsTechTest.Application.csproj" />
+    <ProjectReference Include="..\NhsTechTest.Infrastructure\NhsTechTest.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

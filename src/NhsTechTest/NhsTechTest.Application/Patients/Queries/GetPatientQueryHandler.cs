@@ -5,15 +5,10 @@ using NhsTechTest.Domain.Repositories;
 
 namespace NhsTechTest.Application.Patients.Queries;
 
-public sealed class GetPatientQueryHandler
-    : IRequestHandler<GetPatientQuery, ErrorOr<PatientSummaryDto>>
+public sealed class GetPatientQueryHandler(IPatientRepository patientRepository)
+        : IRequestHandler<GetPatientQuery, ErrorOr<PatientSummaryDto>>
 {
-    private readonly IPatientRepository _patientRepository;
-
-    public GetPatientQueryHandler(IPatientRepository patientRepository)
-    {
-        _patientRepository = patientRepository;
-    }
+    private readonly IPatientRepository _patientRepository = patientRepository;
 
     public async Task<ErrorOr<PatientSummaryDto>> Handle(
         GetPatientQuery query,

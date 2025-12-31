@@ -9,8 +9,8 @@ public class InMemoryPatientRepository : IPatientRepository
 
     public InMemoryPatientRepository()
     {
-        _patients = new List<Patient>
-        {
+        _patients =
+        [
             Patient.Create(
                 id: 1,
                 nhsNumber: "485 777 3456",
@@ -45,7 +45,7 @@ public class InMemoryPatientRepository : IPatientRepository
                 name: "Catherine Brown",
                 dateOfBirth: new DateTime(2001, 9, 17),
                 gpPractice: "Riverside Medical Centre")
-        };
+        ];
     }
 
     public Task<IEnumerable<Patient>> GetAllAsync(CancellationToken cancellationToken = default)
