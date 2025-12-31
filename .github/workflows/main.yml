@@ -42,7 +42,7 @@ jobs:
       run: |
         cd src/HealthcareApi.API
         dotnet build --configuration Release
-        swagger tofile --output ../../../swagger.json bin/Release/net8.0/HealthcareApi.API.dll v1
+        swagger tofile --output ../../../swagger.json bin/Release/net8.0/NhsTechTest.API.dll v1
     
     - name: Create docs directory
       run: mkdir -p docs
