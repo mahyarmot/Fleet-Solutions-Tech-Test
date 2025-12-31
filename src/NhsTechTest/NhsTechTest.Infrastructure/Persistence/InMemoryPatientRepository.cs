@@ -47,7 +47,7 @@ public class InMemoryPatientRepository : IPatientRepository
                 gpPractice: "Riverside Medical Centre")
         };
     }
-    }
+
     public Task<IEnumerable<Patient>> GetAllAsync(CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
