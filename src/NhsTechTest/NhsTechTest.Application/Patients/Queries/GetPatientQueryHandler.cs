@@ -29,7 +29,7 @@ public sealed class GetPatientQueryHandler(IPatientRepository patientRepository)
         {
             return Error.NotFound(
                 code: "Patient.NotFound",
-                description: $"No patient found with ID {query.PatientId}");
+                description: $"No patient found with ID: {query.PatientId}");
         }
 
         return new PatientSummaryDto(
