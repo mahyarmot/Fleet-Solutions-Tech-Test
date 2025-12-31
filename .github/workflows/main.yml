@@ -40,7 +40,7 @@ jobs:
     
     - name: Generate Swagger JSON
       run: |
-        cd src/HealthcareApi.API
+        cd src/NhsTechTest.API
         dotnet build --configuration Release
         swagger tofile --output ../../../swagger.json bin/Release/net8.0/NhsTechTest.API.dll v1
     
