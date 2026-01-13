@@ -1,6 +1,0 @@
-@NhsTechTest_HostAddress = http://localhost:5223
-
-GET {{NhsTechTest_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
