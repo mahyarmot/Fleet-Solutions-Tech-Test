@@ -6,6 +6,7 @@ namespace NhsTechTest.Infrastructure.Persistence;
 public class InMemoryPatientRepository : IPatientRepository
 {
     private readonly List<Patient> _patients;
+    private int _nextId;
 
     public InMemoryPatientRepository()
     {
@@ -61,5 +62,59 @@ public class InMemoryPatientRepository : IPatientRepository
 
         var patient = _patients.FirstOrDefault(p => p.Id == id);
         return Task.FromResult(patient);
+    }
+
+    public Task<Patient?> GetByNHSNumberAsync(string nhsNumber, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        var patient = _patients.FirstOrDefault(p => p.NHSNumber == nhsNumber);
+        return Task.FromResult(patient);
+    }
+
+    public Task<int> AddAsync(Patient patient, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        // Assign new ID
+        var patientWithId = Patient.Create(
+            id: _nextId,
+            nhsNumber: patient.NHSNumber,
+            name: patient.Name,
+            dateOfBirth: patient.DateOfBirth,
+            gpPractice: patient.GPPractice);
+
+        _patients.Add(patientWithId);
+        var assignedId = _nextId;
+        _nextId++;
+
+        return Task.FromResult(assignedId);
+    }
+
+    public Task UpdateAsync(Patient patient, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        var existingPatient = _patients.FirstOrDefault(p => p.Id == patient.Id);
+        if (existingPatient is not null)
+        {
+            _patients.Remove(existingPatient);
+            _patients.Add(patient);
+        }
+
+        return Task.CompletedTask;
+    }
+
+    public Task DeleteAsync(int id, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        var patient = _patients.FirstOrDefault(p => p.Id == id);
+        if (patient is not null)
+        {
+            _patients.Remove(patient);
+        }
+
+        return Task.CompletedTask;
     }
 }

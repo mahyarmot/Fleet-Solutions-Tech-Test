@@ -19,5 +19,17 @@ public interface IPatientRepository
     /// <returns></returns>
     Task<IEnumerable<Patient>> GetAllAsync(CancellationToken cancellationToken = default);
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="nhsNumber"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
+    Task<Patient?> GetByNHSNumberAsync(string nhsNumber, CancellationToken cancellationToken);
 
+    public Task<int> AddAsync(Patient patient, CancellationToken cancellationToken = default);
+
+    public Task UpdateAsync(Patient patient, CancellationToken cancellationToken = default);
+
+    public Task DeleteAsync(int id, CancellationToken cancellationToken = default);
 }

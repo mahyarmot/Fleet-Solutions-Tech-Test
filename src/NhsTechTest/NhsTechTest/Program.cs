@@ -1,5 +1,7 @@
+using Microsoft.Azure.Cosmos;
 using NhsTechTest.Application;
 using NhsTechTest.Infrastructure;
+using NhsTechTest.Infrastructure.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,7 +34,7 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 builder.Services.AddApplication();
-builder.Services.AddInfrastructure();
+builder.Services.AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
 
@@ -47,5 +49,16 @@ app.UseHttpsRedirection();
 app.UseCors();
 app.UseAuthorization();
 app.MapControllers();
+
+
+if (app.Environment.IsDevelopment())
+{
+    using var scope = app.Services.CreateScope();
+    var cosmosClient = scope.ServiceProvider.GetRequiredService<CosmosClient>();
+    var settings = scope.ServiceProvider.GetRequiredService<CosmosDbSettings>();
+    var container = cosmosClient.GetContainer(settings.DatabaseName, settings.ContainerName);
+
+    await NhsTechTest.Infrastructure.Seeding.CosmosDbSeeder.SeedDataAsync(container);
+}
 
 app.Run();
